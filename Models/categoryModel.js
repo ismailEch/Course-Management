@@ -3,22 +3,13 @@ const validator = require('validator');
 
 
 const CategorySchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     name: {
         type: String,
-        required: [true, 'Please Enter Plan Name']
-    },
-    price: {
-        type: Number,
-        required: [true, 'Please Enter Plan Price ']
+        required: [true, 'Please Enter Category Name']
     },
     description: {
         type: String,
-        required: [true, 'Please Enter Plan Description']
-    },
-    features: {
-        type: [String] ,
-        required: [true, 'Please Enter Plan features']
+        required: [true, 'Please Enter Category Description']
     },
     createdAt: {
         type: Date,

@@ -5,7 +5,6 @@ const validator = require('validator');
 
 
 const teacherPaymentSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
 
     teacher_id: {
         type: mongoose.Schema.Types.ObjectId,
