@@ -6,7 +6,6 @@ const crypto = require('crypto');
 
 
 const teacherSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
 
     FirstName: {
     type: String,

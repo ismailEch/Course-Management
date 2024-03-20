@@ -3,7 +3,6 @@ const validator = require('validator');
 
 
 const courseSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
 
     title: {
     type: String,

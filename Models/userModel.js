@@ -6,7 +6,6 @@ const crypto = require('crypto');
 
 
 const userSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     FirstName: {
       type: String,
       required: [true, 'Please Enter Your First Name']
