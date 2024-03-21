@@ -31,11 +31,42 @@ const courseSchema = new mongoose.Schema({
     required: [true, 'Please Enter price']
     },
 
+    cover: {
+        type: String,
+        required: [true, 'Please Enter Cover Course']
+        },
+
     valid: {
         type: String,
         enum: ['valid', 'invalid', 'pending'],
         default :'pending'
     },
+    lectures: {
+        type: [{
+            lecture_id: Number,
+            title: {
+                type: String,
+                required: [true, 'Lecture title is required']
+            },
+            duration: {
+                type: String,
+                required: [true, 'Lecture duration is required']
+            },
+            content: {
+                type: String,
+                required: [true, 'Lecture content is required']
+            },
+            resources: [{
+                name: { type: String },
+                url: {
+                    type: String,
+                    required: [true, 'Lecture resources URL is required']
+                }
+            }]
+        }],
+        required: [true, 'At least one lecture is required']
+    },
+    
     Category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
