@@ -1,6 +1,7 @@
 const Course = require('../Models/courseModel');
 const Category = require ('../Models/categoryModel');
 const Teacher = require ('../Models/teacherModel');
+const CustomError = require('../Utils/CustomError');
 
 exports.CreateCourse = async (req ,res ,next)=>{
     try {
@@ -10,7 +11,9 @@ exports.CreateCourse = async (req ,res ,next)=>{
         const TeacherExists = await Teacher.findById(instructorID);
         
         if (!CategoryExists || !TeacherExists) {
-            return res.status(404).json({ error: 'Category or Teacher not found' });
+            const err = new CustomError ('Category or Teacher not found' , 404) ;
+            return next (err);
+            // return res.status(404).json({ error: 'Category or Teacher not found hh' });
         }
         const newCourse = await Course.create({ 
             title, 
@@ -31,10 +34,18 @@ exports.CreateCourse = async (req ,res ,next)=>{
     } catch (error) {
         if (error.name === 'ValidationError') {
             // Handle Mongoose errors
-            return res.status(400).json({ error: error.message });
+            const err = new CustomError (error.message , 400) ;
+            return next (err);
+            // return res.status(400).json({ error: error.message });
+        }else if(error.name === 'ValidationError'){
+            const err = new CustomError ('Category or Teacher not found' , 404) ;
+            return next (err);
+            // return res.status(404).json({ error: 'Category or Teacher not found' });
         } else {
             // Handle other errors
-            res.status(500).json({ error: error.message });
+            const err = new CustomError (error.message , 500) ;
+            return next (err);
+            // res.status(500).json({ error: error.message });
         }
     }
 }
@@ -56,7 +67,9 @@ exports.GetAllCourses = async (req ,res ,next)=>{
             Courses : Courses
         })
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        const err = new CustomError(error.message, 500);
+        return next(err);
+        // res.status(500).json({ error: err.message });
     }
 }
 
@@ -65,7 +78,9 @@ exports.GetSingleCourse = async (req,res,next) =>{
     try {
         const course = await Course.findById(req.params.id);
         if (!course) {
-            return res.status(404).json({ error: 'Course not found' });
+            const err = new CustomError ('Course not found' , 404) ;
+            return next (err);
+            // return res.status(404).json({ error: 'Course not found' });
         }
         res.status(200).json({
             status:'success' ,
@@ -73,9 +88,13 @@ exports.GetSingleCourse = async (req,res,next) =>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).json({ error: 'Course not found' });
+            const err = new CustomError ('Course not found' , 404) ;
+            return next (err);
+            // return res.status(404).json({ error: 'Course not found' });
         }
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);
+        // res.status(500).json({ error: error.message });
     }
 }
 
@@ -85,7 +104,9 @@ exports.UpdateCourse = async (req,res,next)=>{
         const { title, description ,language , level , price , cover , valid  , lectures , CategoryID} = req.body;
         const updatedCourse = await Course.findByIdAndUpdate(req.params.id, { title, description ,language , level , price , cover , valid  , lectures , Category:CategoryID }, { new: true });
         if (!updatedCourse) {
-            return res.status(404).json({ error: 'Course not found' });
+            const err = new CustomError ('Course not found' , 404) ;
+            return next (err);
+            // return res.status(404).json({ error: 'Course not found' });
         }
         res.status(200).json({
             status :'update success' ,
@@ -93,9 +114,13 @@ exports.UpdateCourse = async (req,res,next)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).json({ error: 'Course not found' });
+            const err = new CustomError ('Course not found' , 404) ;
+            return next (err);
+            // return res.status(404).json({ error: 'Course not found' });
         }
-        res.status(500).json({ error: error.message });
+            const err = new CustomError (error.message, 500) ;
+            return next (err);
+        // res.status(500).json({ error: error.message });
     }
 }
 
@@ -104,13 +129,17 @@ exports.deleteCourse = async (req,res,next)=>{
     try {
         const course = await Course.findByIdAndDelete(req.params.id);
         if (!course) {
-            return res.status(404).json({ error: 'Course not found' });
+            const err = new CustomError ('Course not found' , 404) ;
+            return next (err);
         }
         res.status(200).json({ message: 'Course deleted successfully'});
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).json({ error: 'Course not found' });
+            const err = new CustomError ('Course not found' , 404) ;
+            return next (err);
         }
-        res.status(500).json({ error: error.message });
+            const err = new CustomError (error.message, 500) ;
+            return next (err);
+        // res.status(500).json({ error: error.message });
     }
 }

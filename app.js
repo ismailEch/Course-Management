@@ -6,6 +6,10 @@ const app = express();
 const mongoose = require('mongoose');
 // Importing db.js
 const db = require('./Configs/db');
+//importing error class
+const CustomError = require('./Utils/CustomError') ;
+const globalErrorHandler = require ('./Middlewares/errorMiddleware')
+
 //Importing Routes
 const authTeacherRouter = require ('./Routes/authTeacherRouter');
 const authUserRouter = require ('./Routes/authUserRouter');
@@ -35,6 +39,16 @@ app.use('/api/subscription' , subscriptionRouter);
 app.use('/api/teacher' , teacherRouter);
 app.use('/api/user' , userRouter);
 app.use('/api/wishList' , wishListRouter);
+
+//undifind ROUTE OR URL
+app.all('*' , (req ,res ,next)=>{
+    const err = new CustomError (`Cannot hh find ${req.originalUrl} on the server` , 404);
+    next(err);
+})
+
+// // Global Error Handling Middleware
+app.use(globalErrorHandler)
+
 
 
 const PORT = 3000 || process.env.PORT ; 

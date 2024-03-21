@@ -1,4 +1,6 @@
 const Category = require('../Models/categoryModel');
+const CustomError = require('../Utils/CustomError');
+
 
 //create Category function
 exports.CreateCategory  = async(req,res,next)=>{
@@ -10,7 +12,8 @@ exports.CreateCategory  = async(req,res,next)=>{
             Category:newCategory
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);
     }
 
 }
@@ -24,7 +27,8 @@ exports.GetCategories = async (req,res,next)=>{
             Categories : Categories
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);;
     }
 }
 //create Single Category function
@@ -33,7 +37,8 @@ exports.GetSingleCategory = async (req,res,next)=>{
         const OneCategory = await Category.findById(req.params.id);
 
         if (!OneCategory) {
-            return res.status(404).json({ error: 'Category not found' });
+            const err = new CustomError ('Category Not Found' , 404) ;
+            return next (err);
         }
         res.status(200).json({
             status:'success' ,
@@ -41,9 +46,11 @@ exports.GetSingleCategory = async (req,res,next)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).json({ error: 'Category not found' });
+            const err = new CustomError ('Category Not Found' , 404) ;
+            return next (err);
         }
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);
     }
 }
 
@@ -53,7 +60,8 @@ exports.UpdateCategory = async (req,res,next)=>{
         const { name, description,  } = req.body;
         const updateCategory = await Category.findByIdAndUpdate(req.params.id, { name, description }, { new: true });
         if (!updateCategory) {
-            return res.status(404).json({ error: 'Categor not found' });
+            const err = new CustomError ('Category Not Found' , 404) ;
+            return next (err);
         }
         res.status(200).json({
             status:'update success' ,
@@ -61,9 +69,11 @@ exports.UpdateCategory = async (req,res,next)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).json({ error: 'Category not found' });
+            const err = new CustomError ('Category Not Found' , 404) ;
+            return next (err);
         }
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);
     }
 }
 
@@ -79,6 +89,7 @@ exports.deleteCategory = async (req,res,next)=>{
         if (error.name === 'CastError') {
             return res.status(404).json({ error: 'Category not found' });
         }
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);
     }
 }
