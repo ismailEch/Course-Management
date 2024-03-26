@@ -4,19 +4,16 @@ const router = express.Router();
 
 
 
+//Register
+router.route('/singup' ).post( authController.registerUser)
+//login
+router.route('/login' ).post( authController.login)
+router.route('/forgotPassword')
+.post(authController.forgotPassword);
+//rest pass:
+router.route('/resetPassword/:token').patch(authController.resetPassword);
 
-router.route('/singup' )
-// .get( authUserController.GetAllCourses)login
-.post( authController.registerUser)
 
-router.route('/login' )
-// .get( authUserController.GetAllCourses)login
-.post( authController.login)
-
-// router.route('/:id' )
-// .get( authUserController.GetSingleCourse)
-// .patch( authUserController.UpdateCourse)
-// .delete( authUserController.deleteCourse)
 
 
 

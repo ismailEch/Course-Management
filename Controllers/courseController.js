@@ -40,12 +40,9 @@ exports.CreateCourse = async (req ,res ,next)=>{
         }else if(error.name === 'ValidationError'){
             const err = new CustomError ('Category or Teacher not found' , 404) ;
             return next (err);
-            // return res.status(404).json({ error: 'Category or Teacher not found' });
         } else {
-            // Handle other errors
             const err = new CustomError (error.message , 500) ;
             return next (err);
-            // res.status(500).json({ error: error.message });
         }
     }
 }
@@ -69,7 +66,6 @@ exports.GetAllCourses = async (req ,res ,next)=>{
     } catch (error) {
         const err = new CustomError(error.message, 500);
         return next(err);
-        // res.status(500).json({ error: err.message });
     }
 }
 
@@ -80,7 +76,6 @@ exports.GetSingleCourse = async (req,res,next) =>{
         if (!course) {
             const err = new CustomError ('Course not found' , 404) ;
             return next (err);
-            // return res.status(404).json({ error: 'Course not found' });
         }
         res.status(200).json({
             status:'success' ,
@@ -116,11 +111,9 @@ exports.UpdateCourse = async (req,res,next)=>{
         if (error.name === 'CastError') {
             const err = new CustomError ('Course not found' , 404) ;
             return next (err);
-            // return res.status(404).json({ error: 'Course not found' });
         }
             const err = new CustomError (error.message, 500) ;
             return next (err);
-        // res.status(500).json({ error: error.message });
     }
 }
 

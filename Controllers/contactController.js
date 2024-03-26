@@ -1,5 +1,5 @@
 const Contact = require('../Models/contactModel');
-
+const CustomError = require('../Utils/CustomError');
 
 //create contact function
 exports.CreateContact = async(req, res, next)=>{
@@ -7,11 +7,12 @@ exports.CreateContact = async(req, res, next)=>{
         const { name, email, message} = req.body;
         const newContact = await Contact.create({name, email, message});
         res.status(201).json({
-            status:'create done',
-            Contact:newContact
+            status:'success',
+            contact:newContact
         });
     }catch (error) {
-        res.status(500).json({ error: error.message});
+        const err = new CustomError(error.message, 500);
+        return next(err);
     }
 }
 
@@ -19,33 +20,44 @@ exports.CreateContact = async(req, res, next)=>{
 exports.getContact = async (req, res, next)=>{
     try {
         const contact = await Contact.find();
+        const contactCount = await Contact.countDocuments();
+        if(contactCount === 0){
+            return res.status(200).json({
+                status:'success',
+                Reviews:'there are no Contact yet'
+            })
+        }
         res.status(200).json({
             status:'success',
-            TotalContact : Contact.length,
-            Contact : contact
+            TotalContact :contactCount,
+            contact : contact
         });
     }catch (error) {
-        res.status(500).json({error: error.message});
+        const err = new CustomError(error.message, 500);
+        return next(err);
     }
 }
-//create a single contact function
+//Get a single contact function
 exports.GetSingleContact = async (req, res, next) =>{
     try{
         const OneContact = await Contact.findById(req.params.id);
 
         if(!OneContact){
-            return res.status(404).json({ error: 'Contact not found' });
+            const err = new CustomError ('Contact not found' , 404) ;
+            return next (err);
         }
         res.status(200).json({
             status:'success' ,
-            Contact : OneContact
+            contact : OneContact
 
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).json({ error: 'Contact not found' });
+            const err = new CustomError ('Contact not found' , 404) ;
+            return next (err);
         }
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);
     }
 
 }
@@ -56,7 +68,8 @@ exports.UpdateContact = async (req,res,next)=>{
         const { name, email, message} = req.body;
         const updateContact = await Contact.findByIdAndUpdate(req.params.id, { name, email, message }, { new: true });
         if (!updateContact) {
-            return res.status(404).json({ error: 'Contact not found' });
+            const err = new CustomError ('Contact not found' , 404) ;
+            return next (err);
         }
         res.status(200).json({
             status:'update success' ,
@@ -64,9 +77,11 @@ exports.UpdateContact = async (req,res,next)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).json({ error: 'Contact not found' });
+            const err = new CustomError ('Contact not found' , 404) ;
+            return next (err);
         }
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);
     }
 }
 
@@ -74,15 +89,18 @@ exports.UpdateContact = async (req,res,next)=>{
 exports.deleteContact = async (req,res,next)=>{
     try {
         const contact = await Contact.findByIdAndDelete(req.params.id);
-        if (!Contact) {
-            return res.status(404).json({ error: 'Contact not found' });
+        if (!contact) {
+            const err = new CustomError ('Contact not found' , 404) ;
+            return next (err);
         }
         res.status(200).json({ message: 'Contact deleted successfully'});
     } catch (error) {
         if (error.name === 'CastError') {
-            return res.status(404).json({ error: 'contact not found' });
+            const err = new CustomError ('Contact not found' , 404) ;
+            return next (err);
         }
-        res.status(500).json({ error: error.message });
+        const err = new CustomError (error.message , 500) ;
+        return next (err);
     }
 }
 
