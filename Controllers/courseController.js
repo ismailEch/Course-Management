@@ -136,3 +136,65 @@ exports.deleteCourse = async (req,res,next)=>{
         // res.status(500).json({ error: error.message });
     }
 }
+//add comment
+exports.addComment = async (req, res, next) => {
+    const { comment } = req.body;
+    let UserId = req.user._id
+    console.log(UserId)
+    try {
+        const courseComment = await Course.findByIdAndUpdate(req.params.id, {
+            $push: { comments: { text:comment, postedBy:UserId } }
+        },
+            { new: true }
+        );
+        res.status(200).json({
+            success: true,
+            courseComment
+        })
+
+    } catch (error) {
+        const err = new CustomError (error.message, 500) ;
+        return next (err);
+    }
+
+}
+//add like to course
+exports.addLike = async (req, res, next) => {
+    let UserId = req.user._id
+    try {
+        const course = await Course.findByIdAndUpdate(req.params.id, {
+            $addToSet: { likes: UserId }
+        },
+            { new: true }
+        );
+        res.status(200).json({
+            success: true,
+            course
+        })
+
+    } catch (error) {
+        const err = new CustomError (error.message, 500) ;
+        return next (err);
+    }
+
+}
+//remove like 
+exports.removeLike = async (req, res, next) => {
+
+    try {
+        const course = await Course.findByIdAndUpdate(req.params.id, {
+            $pull: { likes: req.user._id }
+        },
+            { new: true }
+        );
+        res.status(200).json({
+            success: true,
+            course
+        })
+
+    } catch (error) {
+        const err = new CustomError (error.message, 500) ;
+        return next (err);
+    }
+
+}

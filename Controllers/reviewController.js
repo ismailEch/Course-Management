@@ -4,16 +4,10 @@ const Course = require ('../Models/courseModel')
 
 exports.CreateReview = async(req,res,next)=>{
     try {
-        const {userID,courseID,rating,comment} = req.body
-        // Check if userId and courseId exist in the database
-        // const userExists = await User.findById(userID);
-        // const courseExists = await Course.findById(courseID);
-        
-        // if (!userExists || !courseExists) {
-        //     return res.status(404).json({ error: 'User or Course not found' });
-        // }
-        
-        const newReview = await Review.create({ userID, courseID, rating, comment });
+        let UserId = req.user ;
+        const {courseID,rating,comment} = req.body
+
+        const newReview = await Review.create({ user:UserId , course:courseID, rating, comment });
         res.status(201).json({
             status:'success' ,
             Review : newReview
