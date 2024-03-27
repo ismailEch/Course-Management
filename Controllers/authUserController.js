@@ -28,7 +28,7 @@ exports.registerUser = async (req ,res,next)=>{
         const newUser  =await User.create({FirstName,LastName,email,password,phone,profilePicture});
         const token = signToken(newUser._id);
         res.status(201).json({
-            status:'Seccuss',
+            status:'Success',
             token:token ,
             User:newUser
         });

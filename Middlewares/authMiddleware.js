@@ -17,15 +17,16 @@ exports.protect = async (req, res, next) => {
     }
 
     const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRET_JWT);
-    console.log(decodedToken);
 
     // Check if user exists
     const user = await User.findById(decodedToken.id);
+
     if(!user){
         const error = new CustomError('the user with given token dosn not not exist ',  401);
         next(error)
     }
-    req.user = user; 
+    req.user = user;
+
     next();
 };
 

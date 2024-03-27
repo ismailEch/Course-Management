@@ -30,7 +30,17 @@ const courseSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please Enter price']
     },
-
+    likes: [{ type: mongoose.Schema.Types.ObjectId , ref: "User" }],
+    comments: [
+        {
+            text: String,
+            created: { type: Date, default: Date.now },
+            postedBy: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        },
+    ],
     cover: {
         type: String,
         required: [true, 'Please Enter Cover Course']
