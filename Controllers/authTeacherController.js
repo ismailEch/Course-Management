@@ -18,7 +18,7 @@ const signToken  = id =>{
 exports.registerTeacher = async (req ,res,next)=>{
     try {
         const {FirstName,LastName,email,password,phone,profilePicture} = req.body;
-        const existingTeacher = await User.findOne({ email });
+        const existingTeacher = await Teacher.findOne({ email });
         if (existingTeacher) {
             const err = new CustomError("Email already exists", 400);
             return next(err);
