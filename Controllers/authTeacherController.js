@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-const User = require('../Models/teacherModel');
 const jwt = require('jsonwebtoken');
 const CustomError = require('../Utils/CustomError');
 const sendEmail = require('../Utils/email');
@@ -25,7 +24,7 @@ exports.registerTeacher = async (req ,res,next)=>{
             return next(err);
         }
 
-        const newTeacher  =await User.create({FirstName,LastName,email,password,phone,profilePicture});
+        const newTeacher  =await Teacher.create({FirstName,LastName,email,password,phone,profilePicture});
         const token = signToken(newTeacher._id);
         res.status(201).json({
             status:'Seccuss',
@@ -75,7 +74,7 @@ exports.forgotPassword = async (req, res, next) => {
         const resetToken = teacher.createResetPasswordToken();
         await teacher.save({ validateBeforeSave: false });
 
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/authUser/resetPassword/${resetToken}`;
+        const resetUrl = `${req.protocol}://${req.get('host')}/api/authTeacher/resetPassword/${resetToken}`;
         const message = `We have received a password reset request. Please use the below link to reset your password:\n\n${resetUrl}\n\nThis reset link will be valid only for 10 minutes.`;
 
         try {
@@ -106,7 +105,7 @@ exports.forgotPassword = async (req, res, next) => {
 //Reset Password
 exports.resetPassword = async(req,res,next)=>{
     const token= crypto.createHash('sha256').update(req.params.token).digest('hex');
-    const teacher = await User.findOne({passwordResetToken:token , passwordResetTokenExpires : {$gt:Date.now()}});
+    const teacher = await Teacher.findOne({passwordResetToken:token , passwordResetTokenExpires : {$gt:Date.now()}});
     if(!user){
         const error = new CustomError('token is invalid or has expired !' , 400);
         next(error)

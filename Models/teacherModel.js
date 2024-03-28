@@ -47,7 +47,9 @@ const teacherSchema = new mongoose.Schema({
     createdAt: {
     type: Date,
     default: Date.now
-    }
+    },
+    passwordResetToken :String,
+    passwordResetTokenExpires:Date,
 });
 
  //hashing password
@@ -65,7 +67,17 @@ const teacherSchema = new mongoose.Schema({
 //compaer || check password
 teacherSchema.methods.comparePasswordInDb = async function(pswd, pswdDB) {
     return await bcrypt.compare(pswd, pswdDB);
-  };
+};
+//random token to rest password
+userSchema.methods.createResetPasswordToken =  function (){
+    const resetToken = crypto.randomBytes(32).toString('hex');
+  
+    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    this.passwordResetTokenExpires = Date.now() +10*60*1000;
+    
+    console.log(resetToken,this.passwordResetToken);
+    return resetToken
+}
 
 const Teacher = mongoose.model('Teacher', teacherSchema);
 
