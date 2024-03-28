@@ -29,7 +29,7 @@ exports.registerTeacher = async (req ,res,next)=>{
         res.status(201).json({
             status:'Seccuss',
             token:token,
-            Teacher:newTeacher
+            teacher:newTeacher
         });
     } catch (error) {
         const err = new CustomError (error.message , 500) ;

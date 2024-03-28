@@ -81,7 +81,7 @@ exports.UpdateTeacher = async (req,res,next)=>{
 //delet User
 exports.deleteTeacher = async (req,res,next)=>{
     try {
-        const teacher = await User.findByIdAndDelete(req.params.id);
+        const teacher = await Teacher.findByIdAndDelete(req.params.id);
         if (!teacher) {
             const err = new CustomError ('Teacher not found' , 404) ;
             return next (err);
