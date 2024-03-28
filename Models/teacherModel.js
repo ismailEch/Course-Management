@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
 
-
 const teacherSchema = new mongoose.Schema({
 
     FirstName: {

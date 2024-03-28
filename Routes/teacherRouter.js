@@ -3,12 +3,12 @@ const teacherController = require('../Controllers/teacherController')
 const router = express.Router();
 
 router.route('/' )
-.get(teacherController.getAllUsers)
+.get(teacherController.getAllTeachers)
 
 router.route('/:id' )
-.get( teacherController.GetSingleUser)
-.patch( teacherController.UpdateUser)
-.delete( teacherController.deleteUser)
+.get( teacherController.GetSingleTeacher)
+.patch( teacherController.UpdateTeacher)
+.delete( teacherController.deleteTeacher)
 
 
 
