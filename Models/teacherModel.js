@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+const validator = require('validator');//---------------------------
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
@@ -51,6 +51,22 @@ const teacherSchema = new mongoose.Schema({
     }
 });
 
+ //hashing password
+ teacherSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+    try {
+        const hashedPassword = await bcrypt.hash(this.password, 10);
+        this.password = hashedPassword;
+        next();
+    } catch (error) {
+        next(error);
+    }
+})
+
+//compaer || check password
+teacherSchema.methods.comparePasswordInDb = async function(pswd, pswdDB) {
+    return await bcrypt.compare(pswd, pswdDB);
+  };
 
 const Teacher = mongoose.model('Teacher', teacherSchema);
 
